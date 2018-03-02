@@ -1,7 +1,5 @@
 /* global document */
 const GRID_SIZE = 10;
-let FUTURE_IS_ALIVE = [];
-let LIVE_CELLS = [];
 
 const sheetFunc = function sheetFunc() {
   // Create the <style> tag
@@ -55,17 +53,13 @@ Cell.prototype.liveNeighbors = function liveNeighbors(grid) {
   return surroundingAlive;
 };
 
-Cell.prototype.futureIsAlive = function futureIsAlive() {
-  FUTURE_IS_ALIVE = [];
-  if ((this.liveNeighbors() < 4) && (this.liveNeighbors()) > 2) {
-    FUTURE_IS_ALIVE.push(this);
+Cell.prototype.calculateFutureIsAlive = function calculateFutureIsAlive(grid) {
+  if ((this.liveNeighbors(grid) < 4) && (this.liveNeighbors(grid)) > 2) {
+    this.futureIsAlive = true;
+  } else {
+    this.futureIsAlive = false;
   }
 };
-
-function UpdateLiveCells() {
-  LIVE_CELLS = [];
-  LIVE_CELLS.push(FUTURE_IS_ALIVE);
-}
 
 function Coord(row, col) {
   this.row = row;
@@ -114,9 +108,10 @@ Grid.prototype.getNeighbors = function getNeighbors(cell) {
 };
 
 Grid.prototype.calculateNextGen = function calculateNextGen() {
-  for (var isAlive in this.cells) {
-    if (object.hasOwnProperty(isAlive)) {
-      object.futureIsAlive();
+  for (const cellName in this.cells) {
+    if (this.cells.hasOwnProperty(cellName)) {
+      const cell = this.cells[cellName];
+      cell.calculateFutureIsAlive(this);
     }
   }
 };
