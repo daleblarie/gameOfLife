@@ -1,5 +1,7 @@
 /* global document */
 const GRID_SIZE = 10;
+let FUTURE_IS_ALIVE = [];
+let LIVE_CELLS = [];
 
 const sheetFunc = function sheetFunc() {
   // Create the <style> tag
@@ -34,6 +36,36 @@ Cell.prototype.draw = function draw() {
 Cell.prototype.unDraw = function unDraw() {
   this.classList.remove('gridon');
 };
+
+Cell.prototype.isAlive = function isAlive() {
+  if (this.classList.contains('gridon')) {
+    return true;
+  }
+  return false;
+};
+
+Cell.prototype.liveNeighbors = function liveNeighbors(grid) {
+  const neighbors = grid.getNeighbors(this);
+  let surroundingAlive = 0;
+  for (let i = 0; i < neighbors.length; i += 1) {
+    if (neighbors[i].isAlive()) {
+      surroundingAlive += 1;
+    }
+  }
+  return surroundingAlive;
+};
+
+Cell.prototype.futureIsAlive = function futureIsAlive() {
+  FUTURE_IS_ALIVE = [];
+  if ((this.liveNeighbors() < 4) && (this.liveNeighbors()) > 2) {
+    FUTURE_IS_ALIVE.push(this);
+  }
+};
+
+function UpdateLiveCells() {
+  LIVE_CELLS = [];
+  LIVE_CELLS.push(FUTURE_IS_ALIVE);
+}
 
 function Coord(row, col) {
   this.row = row;
@@ -80,6 +112,21 @@ Grid.prototype.getNeighbors = function getNeighbors(cell) {
 
   return neighbors;
 };
+
+Grid.prototype.calculateNextGen = function calculateNextGen() {
+  for (var isAlive in this.cells) {
+    if (object.hasOwnProperty(isAlive)) {
+      object.futureIsAlive();
+    }
+  }
+};
+
+// Grid.prototype.futureIsAlive = function futureIsAlive(cells) {
+//   for (let i = 0; i < cells.length; i += 1) {
+//     if (cells[i].getNeighbors() < ) {
+//     };
+//   }
+// }
 
 const grid = new Grid();
 
