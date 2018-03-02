@@ -27,6 +27,14 @@ function Cell(pos, div, isAlive) {
   this.isAlive = isAlive;
 }
 
+Cell.prototype.draw = function draw() {
+  this.classList.add('gridon');
+};
+
+Cell.prototype.unDraw = function unDraw() {
+  this.classList.remove('gridon');
+};
+
 function Coord(row, col) {
   this.row = row;
   this.col = col;
@@ -46,6 +54,31 @@ Grid.prototype.get = function get(coord) {
 
 Grid.prototype.add = function add(cell) {
   this.cells[cell.pos.toString()] = cell;
+};
+
+Grid.prototype.draw = function draw(livecells) {
+  for (let i = 0; i < livecells.length; i += 1) {
+    livecells[i].draw();
+  }
+};
+
+// this function will take in a cell and return a array of cells that are neighbors to it
+Grid.prototype.getNeighbors = function getNeighbors(cell) {
+  const mainCellPos = cell.pos;
+  const neighbors = [];
+  for (let i = -1; i < 2; i += 1) {
+    for (let j = -1; j < 2; j += 1) {
+      const currentCoord = new Coord(mainCellPos[0] - i, mainCellPos[1] - j);
+      const current = this.get(currentCoord);
+      if (!(current === cell)) {
+        if (current) {
+          neighbors.push(current);
+        }
+      }
+    }
+  }
+
+  return neighbors;
 };
 
 const grid = new Grid();
