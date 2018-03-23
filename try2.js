@@ -1,5 +1,5 @@
-/* global document Grid Coord Cell */
-const GRID_SIZE = 100;
+/* global document Grid Coord Cell $ */
+const GRID_SIZE = 15;
 
 const sheetFunc = function sheetFunc() {
   // Create the <style> tag
@@ -18,7 +18,7 @@ const sheetFunc = function sheetFunc() {
   return style.sheet;
 };
 const sheet = sheetFunc();
-sheet.insertRule(`.cell {width: ${960 / GRID_SIZE}px ; height: ${960 / GRID_SIZE}px }`, 0);
+sheet.insertRule(`.cell {width: ${1080 / GRID_SIZE}px ; height: ${1080 / GRID_SIZE}px }`, 0);
 
 const grid = new Grid();
 
@@ -34,11 +34,15 @@ for (let i = 0; i < GRID_SIZE; i += 1) {
     grid.add(cell);
   }
 }
+
 grid.cells['0, 0'].isAlive = true;
 grid.cells['1, 0'].isAlive = true;
 grid.cells['0, 1'].isAlive = true;
+grid.listen();
 grid.draw();
+
+//
 setInterval(function() {
   grid.setNextGen();
   grid.draw();
-}, 100);
+}, 2000);

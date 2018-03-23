@@ -24,8 +24,22 @@ Cell.prototype.numLiveNeighbors = function numLiveNeighbors(grid) {
 };
 
 Cell.prototype.calculateFutureIsAlive = function calculateFutureIsAlive(grid) {
-  if ((this.numLiveNeighbors(grid) < 4) && (this.numLiveNeighbors(grid)) > 1) {
+  if (this.isAlive) {
+    if ((this.numLiveNeighbors(grid) === 3) || (this.numLiveNeighbors(grid)) === 2) {
+      return true;
+    }
+    return false;
+  } else if (this.numLiveNeighbors(grid) === 3) {
     return true;
   }
   return false;
+};
+
+Cell.prototype.changeState = function changeState() {
+  if (this.isAlive === true) {
+    this.isAlive = false;
+  } else {
+    this.isAlive = true;
+  }
+  this.draw();
 };

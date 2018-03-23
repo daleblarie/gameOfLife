@@ -47,6 +47,14 @@ Grid.prototype.setNextGen = function setNextGen() {
   }
 };
 
+// Cell.div.prototype.addEventListener('click', this.changeState());
+Grid.prototype.listen = function listen() {
+  const listOfCells = Object.values(this.cells);
+  for (let i = 0; i < listOfCells.length; i += 1) {
+    listOfCells[i].div.addEventListener('click', () => { listOfCells[i].changeState(); });
+  }
+};
+
 // Grid.prototype.futureIsAlive = function futureIsAlive(cells) {
 //   for (let i = 0; i < cells.length; i += 1) {
 //     if (cells[i].getNeighbors() < ) {
