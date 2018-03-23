@@ -1,5 +1,5 @@
-/* global document */
-const GRID_SIZE = 10;
+/* global document Grid Coord Cell */
+const GRID_SIZE = 100;
 
 const sheetFunc = function sheetFunc() {
   // Create the <style> tag
@@ -20,109 +20,6 @@ const sheetFunc = function sheetFunc() {
 const sheet = sheetFunc();
 sheet.insertRule(`.cell {width: ${960 / GRID_SIZE}px ; height: ${960 / GRID_SIZE}px }`, 0);
 
-
-function Cell(pos, div, isAlive) {
-  this.pos = pos;
-  this.div = div;
-  this.isAlive = isAlive;
-}
-
-Cell.prototype.draw = function draw() {
-  this.classList.add('gridon');
-};
-
-Cell.prototype.unDraw = function unDraw() {
-  this.classList.remove('gridon');
-};
-
-Cell.prototype.isAlive = function isAlive() {
-  if (this.classList.contains('gridon')) {
-    return true;
-  }
-  return false;
-};
-
-Cell.prototype.liveNeighbors = function liveNeighbors(grid) {
-  const neighbors = grid.getNeighbors(this);
-  let surroundingAlive = 0;
-  for (let i = 0; i < neighbors.length; i += 1) {
-    if (neighbors[i].isAlive()) {
-      surroundingAlive += 1;
-    }
-  }
-  return surroundingAlive;
-};
-
-Cell.prototype.calculateFutureIsAlive = function calculateFutureIsAlive(grid) {
-  if ((this.liveNeighbors(grid) < 4) && (this.liveNeighbors(grid)) > 2) {
-    this.futureIsAlive = true;
-  } else {
-    this.futureIsAlive = false;
-  }
-};
-
-function Coord(row, col) {
-  this.row = row;
-  this.col = col;
-}
-
-Coord.prototype.toString = function toString() {
-  return `${this.row}, ${this.col}`;
-};
-
-function Grid() {
-  this.cells = {};
-}
-
-Grid.prototype.get = function get(coord) {
-  return this.cells[coord.toString()];
-};
-
-Grid.prototype.add = function add(cell) {
-  this.cells[cell.pos.toString()] = cell;
-};
-
-Grid.prototype.draw = function draw(livecells) {
-  for (let i = 0; i < livecells.length; i += 1) {
-    livecells[i].draw();
-  }
-};
-
-// this function will take in a cell and return a array of cells that are neighbors to it
-Grid.prototype.getNeighbors = function getNeighbors(cell) {
-  const mainCellPos = cell.pos;
-  const neighbors = [];
-  for (let i = -1; i < 2; i += 1) {
-    for (let j = -1; j < 2; j += 1) {
-      const currentCoord = new Coord(mainCellPos[0] - i, mainCellPos[1] - j);
-      const current = this.get(currentCoord);
-      if (!(current === cell)) {
-        if (current) {
-          neighbors.push(current);
-        }
-      }
-    }
-  }
-
-  return neighbors;
-};
-
-Grid.prototype.calculateNextGen = function calculateNextGen() {
-  for (const cellName in this.cells) {
-    if (this.cells.hasOwnProperty(cellName)) {
-      const cell = this.cells[cellName];
-      cell.calculateFutureIsAlive(this);
-    }
-  }
-};
-
-// Grid.prototype.futureIsAlive = function futureIsAlive(cells) {
-//   for (let i = 0; i < cells.length; i += 1) {
-//     if (cells[i].getNeighbors() < ) {
-//     };
-//   }
-// }
-
 const grid = new Grid();
 
 for (let i = 0; i < GRID_SIZE; i += 1) {
@@ -137,3 +34,11 @@ for (let i = 0; i < GRID_SIZE; i += 1) {
     grid.add(cell);
   }
 }
+grid.cells['0, 0'].isAlive = true;
+grid.cells['1, 0'].isAlive = true;
+grid.cells['0, 1'].isAlive = true;
+grid.draw();
+setInterval(function() {
+  grid.setNextGen();
+  grid.draw();
+}, 100);
