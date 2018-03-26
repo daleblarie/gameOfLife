@@ -1,5 +1,9 @@
-/* global document Grid Coord Cell $ */
+/* global document Grid Coord Cell */
 const GRID_SIZE = 15;
+
+const newGridButton = document.getElementById('newGrid');
+const startLoopButton = document.getElementById('startGenerator');
+const stopLoopbutton = document.getElementById('stopGenerator');
 
 const sheetFunc = function sheetFunc() {
   // Create the <style> tag
@@ -42,7 +46,37 @@ grid.listen();
 grid.draw();
 
 //
-setInterval(function() {
-  grid.setNextGen();
-  grid.draw();
-}, 2000);
+function assignToButton(but, func, paramArr) {
+  function funct() {
+    if (paramArr) {
+      func(...paramArr);
+    } else {
+      func();
+    }
+  }
+  but.addEventListener('click', () => { funct(); });
+}
+
+let loop;
+
+const startLoop = () => {
+  loop = setInterval(() => {
+    console.log('started');
+    grid.setNextGen();
+    grid.draw();
+  }, 500);
+};
+const stopLoop = () => {
+  clearInterval(loop);
+  console.log('stop');
+};
+const clearGrid = function clearGrid(obj, loopName) {
+  stopLoop(loopName);
+  console.log('clear');
+  obj.clear();
+  obj.draw();
+};
+
+assignToButton(startLoopButton, startLoop);
+assignToButton(stopLoopbutton, stopLoop, [loop]);
+assignToButton(newGridButton, clearGrid, [grid, loop]);

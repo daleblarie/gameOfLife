@@ -3,6 +3,13 @@ function Grid() {
   this.cells = {};
 }
 
+Grid.prototype.clear = function clear() {
+  const listOfCells = Object.values(this.cells);
+  for (let i = 0; i < listOfCells.length; i += 1) {
+    listOfCells[i].isAlive = false;
+  }
+};
+
 Grid.prototype.get = function get(coord) {
   return this.cells[coord.toString()];
 };
