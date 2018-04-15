@@ -4,10 +4,21 @@
 	outline:2px solid #000;
 	font-size: 0;
 	margin:auto;
-	height:1080px;
-	width:1080px;
+	height:480px;
+	width:480px;
 	padding: 0;
 	border: none;
+}
+
+#header {
+	position: relative;
+	width: 480px;
+	margin: auto;
+	text-align: center;
+}
+
+#myRange {
+	direction: rtl;
 }
 
 .row {

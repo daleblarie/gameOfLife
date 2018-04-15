@@ -1,9 +1,12 @@
 /* global document Grid Coord Cell */
-const GRID_SIZE = 15;
+const GRID_SIZE = 40;
+const GRID_WIDTH = 480;
 
 const newGridButton = document.getElementById('newGrid');
-const startLoopButton = document.getElementById('startGenerator');
-const stopLoopbutton = document.getElementById('stopGenerator');
+const startStopLoopButton = document.getElementById('startStopGenerator');
+const slider = document.getElementById('myRange');
+let sliderVal = slider.value;
+
 
 const sheetFunc = function sheetFunc() {
   // Create the <style> tag
@@ -22,7 +25,7 @@ const sheetFunc = function sheetFunc() {
   return style.sheet;
 };
 const sheet = sheetFunc();
-sheet.insertRule(`.cell {width: ${1080 / GRID_SIZE}px ; height: ${1080 / GRID_SIZE}px }`, 0);
+sheet.insertRule(`.cell {width: ${GRID_WIDTH / GRID_SIZE}px ; height: ${GRID_WIDTH / GRID_SIZE}px }`, 0);
 
 const grid = new Grid();
 
@@ -39,9 +42,46 @@ for (let i = 0; i < GRID_SIZE; i += 1) {
   }
 }
 
-grid.cells['0, 0'].isAlive = true;
-grid.cells['1, 0'].isAlive = true;
-grid.cells['0, 1'].isAlive = true;
+grid.cells['12, 26'].isAlive = true;
+grid.cells['13, 26'].isAlive = true;
+grid.cells['13, 28'].isAlive = true;
+grid.cells['14, 9'].isAlive = true;
+grid.cells['14, 27'].isAlive = true;
+grid.cells['14, 29'].isAlive = true;
+grid.cells['14, 34'].isAlive = true;
+grid.cells['14, 35'].isAlive = true;
+grid.cells['15, 9'].isAlive = true;
+grid.cells['15, 10'].isAlive = true;
+grid.cells['15, 27'].isAlive = true;
+grid.cells['15, 30'].isAlive = true;
+grid.cells['15, 34'].isAlive = true;
+grid.cells['15, 35'].isAlive = true;
+grid.cells['16, 0'].isAlive = true;
+grid.cells['16, 1'].isAlive = true;
+grid.cells['16, 4'].isAlive = true;
+grid.cells['16, 5'].isAlive = true;
+grid.cells['16, 10'].isAlive = true;
+grid.cells['16, 11'].isAlive = true;
+grid.cells['16, 27'].isAlive = true;
+grid.cells['16, 29'].isAlive = true;
+grid.cells['17, 0'].isAlive = true;
+grid.cells['17, 1'].isAlive = true;
+grid.cells['17, 4'].isAlive = true;
+grid.cells['17, 5'].isAlive = true;
+grid.cells['17, 10'].isAlive = true;
+grid.cells['17, 11'].isAlive = true;
+grid.cells['17, 12'].isAlive = true;
+grid.cells['17, 26'].isAlive = true;
+grid.cells['17, 28'].isAlive = true;
+grid.cells['18, 4'].isAlive = true;
+grid.cells['18, 5'].isAlive = true;
+grid.cells['18, 10'].isAlive = true;
+grid.cells['18, 11'].isAlive = true;
+grid.cells['18, 26'].isAlive = true;
+grid.cells['19, 9'].isAlive = true;
+grid.cells['19, 10'].isAlive = true;
+grid.cells['20, 9'].isAlive = true;
+
 grid.listen();
 grid.draw();
 
@@ -57,26 +97,55 @@ function assignToButton(but, func, paramArr) {
   but.addEventListener('click', () => { funct(); });
 }
 
-let loop;
+// let loop;
+let shouldLoop = true;
 
-const startLoop = () => {
-  loop = setInterval(() => {
-    console.log('started');
+
+function looper() {
+  if (shouldLoop) {
+    console.log('looping');
     grid.setNextGen();
     grid.draw();
-  }, 500);
+    setTimeout(looper, sliderVal);
+  } else {
+    setTimeout(looper, sliderVal);
+  }
+}
+setTimeout(looper(), sliderVal);
+// setInterval(() => {
+//   if (shouldLoop) {
+//     console.log('looping');
+//     grid.setNextGen();
+//     grid.draw();
+//   }
+// }, sliderVal);
+
+
+const startStopLoop = () => {
+  if (shouldLoop) {
+    shouldLoop = false;
+    console.log('stop');
+  } else {
+    shouldLoop = true;
+    console.log('start');
+  }
 };
-const stopLoop = () => {
-  clearInterval(loop);
-  console.log('stop');
-};
-const clearGrid = function clearGrid(obj, loopName) {
-  stopLoop(loopName);
+
+// const startLoop = () => {
+//   shouldLoop = true;
+//   console.log('start');
+// };
+
+const clearGrid = function clearGrid(obj) {
+  shouldLoop = false;
   console.log('clear');
   obj.clear();
   obj.draw();
 };
+assignToButton(startStopLoopButton, startStopLoop);
+assignToButton(newGridButton, clearGrid, [grid]);
 
-assignToButton(startLoopButton, startLoop);
-assignToButton(stopLoopbutton, stopLoop, [loop]);
-assignToButton(newGridButton, clearGrid, [grid, loop]);
+slider.oninput = function oninput() {
+  sliderVal = this.value;
+  console.log('change');
+};
